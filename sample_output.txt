@@ -1,0 +1,35 @@
+[GEN] Thermostat TELEMETRY: {'temp_c': 19.8, 'battery': 0.94}
+[GEN] Camera HEARTBEAT: {'status': 'ok', 'rssi': -63}
+[GEN] Camera HEARTBEAT: {'status': 'ok', 'rssi': -65}
+[GEN] Camera HEARTBEAT: {'status': 'ok', 'rssi': -54}
+[GEN] Camera ALARM: {'event': 'motion', 'seq': 0, 'confidence': 0.88}
+[GEN] Camera ALARM: {'event': 'motion', 'seq': 1, 'confidence': 0.95}
+[GEN] Camera ALARM: {'event': 'motion', 'seq': 2, 'confidence': 0.98}
+[GEN] Thermostat TELEMETRY: {'temp_c': 23.2, 'battery': 0.79}
+[GEN] Camera HEARTBEAT: {'status': 'ok', 'rssi': -45}
+[GEN] Camera ALARM: {'event': 'motion', 'seq': 0, 'confidence': 0.75}
+[GEN] Camera ALARM: {'event': 'motion', 'seq': 1, 'confidence': 0.96}
+[GEN] Camera ALARM: {'event': 'motion', 'seq': 2, 'confidence': 0.75}
+[GEN] Camera HEARTBEAT: {'status': 'ok', 'rssi': -54}
+[GEN] Camera ALARM: {'event': 'motion', 'seq': 0, 'confidence': 0.73}
+[GEN] Camera ALARM: {'event': 'motion', 'seq': 1, 'confidence': 0.87}
+[GEN] Camera ALARM: {'event': 'motion', 'seq': 2, 'confidence': 0.78}
+[EVAL] ALARM: # of packets=9; avg delay= 0.00027216805352105037
+[EVAL] IOT: # of packets=7; avg delay= 0.00016614368983677456
+[TEST] Chain Previous/Current Hash Validation Check: PASS
+[TEST] Block #: 0, Tx #: 3, Prev Hash: 0, Current Hash: 423bca4d562e167f3d50302edbb6a4cc1b7f0445c0e04b5f3246e9d640e1fef7
+[TEST] Block #: 1, Tx #: 3, Prev Hash: 423bca4d562e167f3d50302edbb6a4cc1b7f0445c0e04b5f3246e9d640e1fef7, Current Hash: 1499c28f326bb4b50a6ac2e962853d1c944bb345cba90208f1f003d889694997
+[TEST] Block #: 2, Tx #: 3, Prev Hash: 1499c28f326bb4b50a6ac2e962853d1c944bb345cba90208f1f003d889694997, Current Hash: 6c5dbe8196de335708ca97970a3c779d9a1f73ce6fab50f9117f264422a71928
+[TEST] Block #: 3, Tx #: 3, Prev Hash: 6c5dbe8196de335708ca97970a3c779d9a1f73ce6fab50f9117f264422a71928, Current Hash: 9225c06ec87f14dd9316e580033c6f0e767ce24f44abc381749afc483d34680a
+[TEST] Block #: 4, Tx #: 3, Prev Hash: 9225c06ec87f14dd9316e580033c6f0e767ce24f44abc381749afc483d34680a, Current Hash: e84ab286b3bef7a4df19acaa43a9671f813f892bce08540a59a6e6bfe5863a1b
+[TEST] Block #: 5, Tx #: 1, Prev Hash: e84ab286b3bef7a4df19acaa43a9671f813f892bce08540a59a6e6bfe5863a1b, Current Hash: e99fec395c7e9d6ccedf9f21be2adef89324a75dc79df9e024c5ce4db54aedbd
+[TEST] Block #: 0, Tx #: 3, Prev Hash: 0, Current Hash: 423bca4d562e167f3d50302edbb6a4cc1b7f0445c0e04b5f3246e9d640e1fef7
+[TEST] Block #: 1, Tx #: 3, Prev Hash: 423bca4d562e167f3d50302edbb6a4cc1b7f0445c0e04b5f3246e9d640e1fef7, Current Hash: 1499c28f326bb4b50a6ac2e962853d1c944bb345cba90208f1f003d889694997
+[TEST] Block #: 2, Tx #: 3, Prev Hash: 1499c28f326bb4b50a6ac2e962853d1c944bb345cba90208f1f003d889694997, Current Hash: 6c5dbe8196de335708ca97970a3c779d9a1f73ce6fab50f9117f264422a71928
+[TEST] Block #: 3, Tx #: 3, Prev Hash: 6c5dbe8196de335708ca97970a3c779d9a1f73ce6fab50f9117f264422a71928, Current Hash: 9225c06ec87f14dd9316e580033c6f0e767ce24f44abc381749afc483d34680a
+[TEST] Block #: 4, Tx #: 3, Prev Hash: 9225c06ec87f14dd9316e580033c6f0e767ce24f44abc381749afc483d34680a, Current Hash: e84ab286b3bef7a4df19acaa43a9671f813f892bce08540a59a6e6bfe5863a1b
+[TEST] Block #: 5, Tx #: 1, Prev Hash: e84ab286b3bef7a4df19acaa43a9671f813f892bce08540a59a6e6bfe5863a1b, Current Hash: e99fec395c7e9d6ccedf9f21be2adef89324a75dc79df9e024c5ce4db54aedbd
+[TEST] Chain Previous/Current Hash Validation Check: FAIL
+FlowRule(match=Match(src='Thermostat', dst='HomeHub', proto='TCP', dport=1883, tag=<Tag.IOT: 'IOT'>), action=<Action.FORWARD: 'FORWARD'>, priority=2, hit_count=2, policy=<Policy.IOT: 'IoT Isolation'>)
+FlowRule(match=Match(src='Camera', dst='HomeHub', proto='TCP', dport=1883, tag=<Tag.IOT: 'IOT'>), action=<Action.FORWARD: 'FORWARD'>, priority=2, hit_count=5, policy=<Policy.IOT: 'IoT Isolation'>)
+FlowRule(match=Match(src='Camera', dst='HomeHub', proto='TCP', dport=8883, tag=<Tag.ALARM: 'ALARM'>), action=<Action.FORWARD: 'FORWARD'>, priority=7, hit_count=9, policy=<Policy.QOS: 'QoS'>)
