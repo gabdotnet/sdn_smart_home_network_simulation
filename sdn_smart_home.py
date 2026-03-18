@@ -6,16 +6,10 @@ from enum import Enum
 import hashlib
 import copy
 
-# TO-DO:
-# 1. operational rate limit feature in controller.policy_check
-# 2. idle timeout
-
 
 # tx_id initialization
-og_tx_id: int = 1000
+next_tx_id: int = 1000
 
-
-# - could improve this design by doing dictionary of a dictionary
 
 # categorical device lists
 lan_devs = ["Laptop", "Phone"]
@@ -39,7 +33,6 @@ port_map = {
 
 
 # enum class for tag as there are a finite number of tags
-# - surely there's a way to turn this into a dictionary with set priorities per tag, that way you dont have to do the verification via the onpacketin policy check
 class Tag(str, Enum):
     BESTEFFORT = "BESTEFFORT"
     VOICE = "VOICE"
@@ -162,23 +155,16 @@ class Block:
 
 # IoT gen funcs
 
+# Periodic sensing: produce a message every interval_s seconds. Returns None if it is not time to send.
 def generate_periodic_telemetry(device: str, interval_s: float, make_payload: Callable[[], dict], now: float, last_sent: Dict[str, float],) -> Optional[IoTMessage]:
-    """
-    Periodic sensing: produce a message every interval_s seconds.
-    Returns None if it is not time to send.
-    """
     last = last_sent.get(device, 0.0)
     if (now - last) < interval_s:
         return None
     last_sent[device] = now
     return IoTMessage(device=device, msg_type=Tag.TELEMETRY, payload=make_payload(), ts=now)
 
-
+# Event-based sensing: with probability event_prob at each time step, generate a burst of ALARM messages (e.g., motion detected).
 def generate_event_alarm_burst(device: str, event_prob: float, burst_size: int, make_payload: Callable[[int], dict], now: float) -> List[IoTMessage]:
-    """
-    Event-based sensing: with probability event_prob at each time step,
-    generate a burst of ALARM messages (e.g., motion detected).
-    """
     msgs: List[IoTMessage] = []
     if random.random() > event_prob:
         return msgs
@@ -187,12 +173,8 @@ def generate_event_alarm_burst(device: str, event_prob: float, burst_size: int, 
         msgs.append(IoTMessage(device=device, msg_type=Tag.ALARM, payload=make_payload(i), ts=now))
     return msgs
 
-
+# Convert IoTMessage into an SDN Packet. Assumes telemetry and alarms are sent from device -> HomeHub.
 def iot_message_to_packet(msg: IoTMessage) -> "Packet":
-    """
-    Convert IoTMessage into an SDN Packet.
-    Assumes telemetry and alarms are sent from device -> HomeHub.
-    """
     # Map message type to SDN traffic class/tag:
     tag = Tag.IOT if msg.msg_type == Tag.TELEMETRY else Tag.ALARM
 
@@ -202,7 +184,7 @@ def iot_message_to_packet(msg: IoTMessage) -> "Packet":
 
     return Packet(src=msg.device, dst="HomeHub", proto=proto, dport=dport, tag=tag, ts=msg.ts)
 
-
+# func to start up IoT generation
 def run_iot_generation_demo(sw: "Switch", bc: "Blockchain", duration_s: float = 20.0, step_s: float = 0.2) -> None:
     start = time.time()
     last_sent: Dict[str, float] = {}
@@ -337,9 +319,9 @@ class Blockchain:
 # converts PacketProcessor obj to AuditRecord obj by linking attributes
 def record_converter(packet_processor: PacketProcessor) -> AuditRecord:
     audit_record = AuditRecord()
-    global og_tx_id
+    global next_tx_id
 
-    audit_record.tx_id = og_tx_id
+    audit_record.tx_id = next_tx_id
     audit_record.timestamp = time.time()
     audit_record.src = packet_processor.packet.src
     audit_record.dst = packet_processor.packet.dst
@@ -347,7 +329,7 @@ def record_converter(packet_processor: PacketProcessor) -> AuditRecord:
     audit_record.action = packet_processor.action
     audit_record.policy = packet_processor.policy
 
-    og_tx_id +=1
+    next_tx_id +=1
 
     return audit_record
 
